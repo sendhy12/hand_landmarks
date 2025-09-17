@@ -6,6 +6,7 @@ import math
 from collections import deque
 from gtts import gTTS
 import tempfile
+import base64   # <-- wajib untuk encode mp3
 
 # ==============================
 # Hand Gesture Recognizer Class
