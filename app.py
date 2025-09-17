@@ -39,17 +39,22 @@ class HandGestureRecognizer:
             self.is_finger_up(landmarks, pinky_tip, pinky_pip),
         ]
 
+        # Pinch
         if self.calculate_distance(landmarks[thumb_tip], landmarks[index_tip]) < 0.05:
             return "pinch"
+        # Peace ✌️
         elif fingers_up == [False, True, True, False, False]:
             return "peace"
+        # Middle finger 🖕 (sebelumnya thumbs_up)
         elif fingers_up == [False, False, True, False, False]:
-            return "thumbs_up"
+            return "middle_finger"
+        # OK sign 👌
         elif (self.calculate_distance(landmarks[thumb_tip], landmarks[index_tip]) < 0.08 
               and fingers_up[2:] == [True, True, True]):
             return "ok_sign"
-        elif not any(fingers_up[1:]):
-            return "fist"
+        # Thumbs up 👍 (sebelumnya fist)
+        elif fingers_up[0] and not any(fingers_up[1:]):
+            return "thumbs_up"
         return "none"
 
     def process_frame(self, frame):
@@ -100,9 +105,9 @@ if img_file:
     responses = {
         'pinch': "Love you!",
         'peace': "Peace!",
-        'thumbs_up': "Fuck you, bitch!",
+        'middle_finger': "Fuck you, bitch!",   # jari tengah
         'ok_sign': "OK! OK!",
-        'fist': "Mantap bro!",
+        'thumbs_up': "Mantap bro!",           # acungan jempol
         'none': "No gesture detected"
     }
     st.success(responses[gesture])
