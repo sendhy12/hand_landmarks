@@ -6,7 +6,7 @@ import math
 from collections import deque
 from gtts import gTTS
 import tempfile
-import base64   # <-- wajib untuk encode mp3
+import base64   # penting untuk autoplay audio
 
 # ==============================
 # Hand Gesture Recognizer Class
@@ -71,7 +71,6 @@ class HandGestureRecognizer:
                     gesture = self.detect_gesture(hand_landmarks.landmark)
             return gesture, frame
 
-
 # ==============================
 # TTS helper
 # ==============================
@@ -81,7 +80,6 @@ def speak_gtts(text):
     tts.save(tmp.name)
     return tmp.name
 
-
 # ==============================
 # Streamlit UI
 # ==============================
@@ -89,7 +87,7 @@ st.title("✋ Hand Gesture Recognition (with Voice in Cloud)")
 st.write("Ambil gambar tangan → sistem deteksi gesture → suara diputar otomatis 🎧")
 
 recognizer = HandGestureRecognizer()
-img_file = st.camera_input("Ambil gambar tangan")
+img_file = st.camera_input("📷 Ambil gambar tangan")
 
 if img_file:
     file_bytes = np.asarray(bytearray(img_file.read()), dtype=np.uint8)
@@ -109,13 +107,15 @@ if img_file:
     }
     st.success(responses[gesture])
 
-    # 🔊 Play sound with gTTS
+    # 🔊 Auto play sound with gTTS
     if gesture != "none":
         audio_file = speak_gtts(responses[gesture])
+        with open(audio_file, "rb") as f:
+            audio_bytes = f.read()
+        audio_base64 = base64.b64encode(audio_bytes).decode()
         audio_html = f"""
         <audio autoplay>
-            <source src="data:audio/mp3;base64,{base64.b64encode(open(audio_file, "rb").read()).decode()}" type="audio/mp3">
+            <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
         </audio>
         """
         st.markdown(audio_html, unsafe_allow_html=True)
-
