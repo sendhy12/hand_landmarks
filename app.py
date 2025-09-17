@@ -99,10 +99,10 @@ if img_file:
 
     responses = {
         'pinch': "Love you!",
-        'peace': "Peace and love!",
+        'peace': "Peace!",
         'thumbs_up': "Fuck you, bitch!",
-        'ok_sign': "OK! Everything's perfect!",
-        'fist': "Power fist! Show your strength!",
+        'ok_sign': "OK! OK!",
+        'fist': "Mantap bro!",
         'none': "No gesture detected"
     }
     st.success(responses[gesture])
