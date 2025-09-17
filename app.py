@@ -4,7 +4,8 @@ import mediapipe as mp
 import numpy as np
 import math
 from collections import deque
-import time
+from gtts import gTTS
+import tempfile
 
 # ==============================
 # Hand Gesture Recognizer Class
@@ -14,16 +15,7 @@ class HandGestureRecognizer:
         self.mp_hands = mp.solutions.hands
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_drawing_styles = mp.solutions.drawing_styles
-
         self.gesture_buffer = deque(maxlen=10)
-        self.colors = {
-            'pinch': (255, 100, 100),
-            'peace': (100, 255, 100),
-            'thumbs_up': (100, 100, 255),
-            'ok_sign': (255, 255, 100),
-            'fist': (255, 100, 255),
-            'none': (200, 200, 200)
-        }
 
     def calculate_distance(self, point1, point2):
         return math.sqrt((point1.x - point2.x)**2 + (point1.y - point2.y)**2)
@@ -55,7 +47,7 @@ class HandGestureRecognizer:
         elif (self.calculate_distance(landmarks[thumb_tip], landmarks[index_tip]) < 0.08 
               and fingers_up[2:] == [True, True, True]):
             return "ok_sign"
-        elif not any(fingers_up[1:]):  # semua jari selain ibu jari turun
+        elif not any(fingers_up[1:]):
             return "fist"
         return "none"
 
@@ -67,7 +59,6 @@ class HandGestureRecognizer:
             min_tracking_confidence=0.5
         ) as hands:
             results = hands.process(frame_rgb)
-
             gesture = "none"
             if results.multi_hand_landmarks:
                 for hand_landmarks in results.multi_hand_landmarks:
@@ -77,15 +68,24 @@ class HandGestureRecognizer:
                         self.mp_drawing_styles.get_default_hand_connections_style(),
                     )
                     gesture = self.detect_gesture(hand_landmarks.landmark)
-
             return gesture, frame
+
+
+# ==============================
+# TTS helper
+# ==============================
+def speak_gtts(text):
+    tts = gTTS(text)
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+    tts.save(tmp.name)
+    return tmp.name
 
 
 # ==============================
 # Streamlit UI
 # ==============================
-st.title("✋ Hand Gesture Recognition (Snapshot Mode)")
-st.write("Arahkan tanganmu ke kamera, lalu klik **Take Photo**.")
+st.title("✋ Hand Gesture Recognition (with Voice in Cloud)")
+st.write("Ambil gambar tangan → sistem deteksi gesture → suara diputar otomatis 🎧")
 
 recognizer = HandGestureRecognizer()
 img_file = st.camera_input("Ambil gambar tangan")
@@ -96,7 +96,7 @@ if img_file:
 
     gesture, processed_frame = recognizer.process_frame(frame)
 
-    st.image(processed_frame, channels="BGR", caption=f"Detected Gesture: {gesture.upper()}")
+    st.image(processed_frame, channels="BGR", caption=f"Gesture: {gesture.upper()}")
 
     responses = {
         'pinch': "Love you!",
@@ -107,3 +107,8 @@ if img_file:
         'none': "No gesture detected"
     }
     st.success(responses[gesture])
+
+    # 🔊 Play sound with gTTS
+    if gesture != "none":
+        audio_file = speak_gtts(responses[gesture])
+        st.audio(audio_file, format="audio/mp3")
