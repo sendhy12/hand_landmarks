@@ -111,4 +111,10 @@ if img_file:
     # 🔊 Play sound with gTTS
     if gesture != "none":
         audio_file = speak_gtts(responses[gesture])
-        st.audio(audio_file, format="audio/mp3")
+        audio_html = f"""
+        <audio autoplay>
+            <source src="data:audio/mp3;base64,{base64.b64encode(open(audio_file, "rb").read()).decode()}" type="audio/mp3">
+        </audio>
+        """
+        st.markdown(audio_html, unsafe_allow_html=True)
+
