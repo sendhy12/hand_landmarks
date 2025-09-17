@@ -43,7 +43,7 @@ class HandGestureRecognizer:
             return "pinch"
         elif fingers_up == [False, True, True, False, False]:
             return "peace"
-        elif fingers_up == [True, False, False, False, False]:
+        elif fingers_up == [False, False, True, False, False]:
             return "thumbs_up"
         elif (self.calculate_distance(landmarks[thumb_tip], landmarks[index_tip]) < 0.08 
               and fingers_up[2:] == [True, True, True]):
@@ -100,7 +100,7 @@ if img_file:
     responses = {
         'pinch': "Love you!",
         'peace': "Peace and love!",
-        'thumbs_up': "Thumbs up! You're awesome!",
+        'thumbs_up': "Fuck you, bitch!",
         'ok_sign': "OK! Everything's perfect!",
         'fist': "Power fist! Show your strength!",
         'none': "No gesture detected"
