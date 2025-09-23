@@ -6,12 +6,6 @@ Perfect for demos, learning computer vision, or just vibing with your camera �
 
 ---
 
-## 🎥 Demo
-
-👉 *\[Tambahkan GIF atau screenshot hasil aplikasi di sini]*
-
----
-
 ## 🚀 Features
 
 * Detects common hand gestures:
