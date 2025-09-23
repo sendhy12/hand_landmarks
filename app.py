@@ -103,12 +103,12 @@ if img_file:
     st.image(processed_frame, channels="BGR", caption=f"Gesture: {gesture.upper()}")
 
     responses = {
-        'pinch': "Love you!",
-        'peace': "Peace!",
-        'middle_finger': "Fuck you, bitch!",   # jari tengah
-        'ok_sign': "OK! OK!",
-        'thumbs_up': "Mantap bro!",           # acungan jempol
-        'none': "No gesture detected"
+        'pinch': "Ayo, tiny heart vibes! 💖",
+        'peace': "Peace out, homie! ✌️",
+        'middle_finger': "Oops! Wrong finger bro 😂👉",
+        'ok_sign': "OK dokie, let's gooo! 👌",
+        'thumbs_up': "Big W! You're awesome 👍🔥",
+        'none': "Hmm... I see no hand magic 🪄"
     }
     st.success(responses[gesture])
 
